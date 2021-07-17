@@ -27,7 +27,9 @@ private:
 
     QGraphicsPixmapItem *alphaImageItem;
 
-    void DrawCharacterOutline(FontCharacter character, QPen pen);
+    void drawCharacterOutline(QPainter *painter, FontCharacter character, QPen pen, qreal scaleX, qreal scaleY);
+
+    int selectedChar;
 
 public:    
     CustomView();

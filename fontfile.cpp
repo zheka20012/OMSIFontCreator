@@ -1,14 +1,8 @@
 #include "FontFile.h"
 
-FontFile::FontFile()
-{
-
-}
-
 FontFile::FontFile(QString fontName)
 {
     FontFile::fontName = fontName;
-    changed = true;
 }
 
 void FontFile::Load(const QString fileName)
@@ -60,18 +54,68 @@ void FontFile::Save()
 
 void FontFile::Save(const QString fileName)
 {
+    if(fontAlphaImage == "")
+    {
+        throw std::runtime_error("File doens't have alpha image!");
+    }
+
     QFile outFile(fileName);
 
     if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text))
-            return;
+    {
+        throw std::runtime_error("Can't open file " + fileName.toStdString() + "!");
+    }
 
     QTextStream outStream(&outFile);
 
     //Write basic info
     outStream << "[newfont]" << Qt::endl;
     outStream << fontName << Qt::endl;
-    outStream << fontColorImage << Qt::endl;
-    outStream << fontAlphaImage << Qt::endl;
+
+
+    QDir dir(fileName);
+    QFileInfo outputDirInfo(fileName);
+    QFileInfo *fileInfo;
+
+    if(fontColorImage != "")
+    {
+        fileInfo = new QFileInfo(fontColorImage);
+
+        if(fileInfo->fileName() != fontColorImage)
+        {
+            QFile::copy(fontColorImage, outputDirInfo.absoluteDir().path() + "\\" + fileInfo->fileName());
+        }
+        else
+        {
+
+            QFile::copy(filePath  + "/" + fontColorImage, outputDirInfo.absoluteDir().path() + "/" + fontColorImage);
+        }
+
+        outStream << dir.relativeFilePath(fontColorImage) << Qt::endl;
+
+        delete fileInfo;
+    }
+    else
+    {
+        outStream << dir.relativeFilePath(fontAlphaImage) << Qt::endl;
+    }
+
+    fileInfo = new QFileInfo(fontAlphaImage);
+
+    if(fileInfo->fileName() != fontAlphaImage)
+    {
+        QFile::copy(fontAlphaImage, outputDirInfo.absoluteDir().path() + "\\" + fileInfo->fileName());
+    }
+    else
+    {
+
+        QFile::copy(filePath  + "/" + fontAlphaImage, outputDirInfo.absoluteDir().path() + "/" + fontAlphaImage);
+    }
+
+    outStream << dir.relativeFilePath(fontAlphaImage) << Qt::endl;
+
+    delete fileInfo;
+
     outStream << characterHeight << Qt::endl;
     outStream << horizontalGap << Qt::endl;
     outStream << Qt::endl << Qt::endl;
@@ -84,11 +128,12 @@ void FontFile::Save(const QString fileName)
 
     outFile.close();
 
-    QFileInfo fileInfo(fileName);
 
-    filePath = fileInfo.absoluteDir().path();
+    fileInfo = new QFileInfo(fileName);
 
-    fontFileName = fileInfo.fileName();
+    filePath = fileInfo->absoluteDir().path();
+
+    fontFileName = fileInfo->fileName();
 
     //Save bitmaps
 

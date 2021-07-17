@@ -8,10 +8,15 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     scene = new QGraphicsScene();
-    on_actionNew_triggered();
+    file = new FontFile("Untitled");
+    ui->graphicsView->Init(file);
+
     ui->graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
     ui->graphicsView->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
     ui->graphicsView->setScene(scene);
+    UpdateInterface();
+    UpdateScene();
+    UpdateTitle();
 }
 
 MainWindow::~MainWindow()
@@ -101,7 +106,24 @@ void MainWindow::on_actionLoad_Alpha_Image_triggered()
 
 
 void MainWindow::on_actionNew_triggered()
-{
+{    
+    if(file != nullptr && file->IsChanged())
+    {
+        int outValue = AskForFileSave();
+
+        switch (outValue) {
+        case QMessageBox::Yes:
+            on_actionSave_triggered();
+            break;
+        case QMessageBox::No:
+            break;
+        case QMessageBox::Cancel:
+            return;
+        }
+    }
+
+    delete file;
+
     file = new FontFile("Untitled");
 
     ui->graphicsView->Init(file);
@@ -113,6 +135,21 @@ void MainWindow::on_actionNew_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
+    if(file->IsChanged())
+    {
+        int outValue = AskForFileSave();
+
+        switch (outValue) {
+        case QMessageBox::Yes:
+            on_actionSave_triggered();
+            break;
+        case QMessageBox::No:
+            break;
+        case QMessageBox::Cancel:
+            return;
+        }
+    }
+
     QString filePath = QFileDialog::getOpenFileName(this, tr("Open Font File"), QDir::currentPath(), "Font File (*.oft)");
 
     if(filePath == "") return;
@@ -122,7 +159,7 @@ void MainWindow::on_actionOpen_triggered()
         delete file;
     }
 
-    file = new FontFile();
+    file = new FontFile("");
     file->Load(filePath);
 
     ui->graphicsView->Init(file);
@@ -153,7 +190,6 @@ void MainWindow::on_actionQuit_triggered()
     QCoreApplication::quit();
 }
 
-
 void MainWindow::on_actionSave_triggered()
 {
     if(file == NULL) return;
@@ -167,7 +203,16 @@ void MainWindow::on_actionSave_triggered()
 
     if(savePath == "") return;
 
-    file->Save(savePath);
+    try
+    {
+        file->Save(savePath);
+    }
+    catch (const std::exception& e)
+    {
+        QMessageBox error(QMessageBox::Warning, "Error saving file!", e.what(), QMessageBox::Ok);
+        error.exec();
+    }
+
     UpdateTitle();
 }
 
@@ -252,3 +297,24 @@ void MainWindow::on_characterTopEdit_valueChanged(int newValue)
     UpdateTitle();
 }
 
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if(file->IsChanged())
+    {
+        int outValue = AskForFileSave();
+
+        switch (outValue) {
+        case QMessageBox::Yes:
+            on_actionSave_triggered();
+            break;
+        case QMessageBox::No:
+            break;
+        case QMessageBox::Cancel:
+            event->ignore();
+            return;
+        }
+    }
+
+    event->accept();
+
+}

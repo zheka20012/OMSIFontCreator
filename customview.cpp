@@ -35,41 +35,29 @@ void CustomView::Redraw(const int selectedIndex)
         }
 
         alphaImageItem = scene->addPixmap(QPixmap::fromImage(*alphaImage));
+        scene->setSceneRect(alphaImageItem->boundingRect());
     }
 
-    if(openedFile->getFontColorImage() != "")
-    {
-        QFileInfo info(openedFile->getFontColorImage());
+//    if(openedFile->getFontColorImage() != "")
+//    {
+//        QFileInfo info(openedFile->getFontColorImage());
 
-        QImage *colorImage;
+//        QImage *colorImage;
 
-        if(info.isAbsolute())
-        {
-            colorImage = new QImage(openedFile->getFontAlphaImage());
-        }
-        else
-        {
-            colorImage = new QImage(openedFile->getFilePath() + "/" + openedFile->getFontColorImage());
-        }
+//        if(info.isAbsolute())
+//        {
+//            colorImage = new QImage(openedFile->getFontAlphaImage());
+//        }
+//        else
+//        {
+//            colorImage = new QImage(openedFile->getFilePath() + "/" + openedFile->getFontColorImage());
+//        }
 
-        scene->addPixmap(QPixmap::fromImage(*colorImage));
+//        scene->addPixmap(QPixmap::fromImage(*colorImage));
 
-    }
+//    }
 
-    QPen pen(Qt::gray, 1, Qt::DashLine, Qt::FlatCap);
-
-    for (int i = 0; i < openedFile->CharactersCount(); i++)
-    {
-        FontCharacter character = openedFile->GetItem(i);
-
-        DrawCharacterOutline(character, pen);
-    }
-
-    if(openedFile->CharactersCount() > 0 && selectedIndex >= 0 && selectedIndex < openedFile->CharactersCount())
-    {
-        pen.setColor(Qt::green);
-        DrawCharacterOutline(openedFile->GetItem(selectedIndex), pen);
-    }
+    selectedChar = selectedIndex;
 
     setScene(scene);
     show();
@@ -77,19 +65,21 @@ void CustomView::Redraw(const int selectedIndex)
     viewport()->update();
 }
 
-void CustomView::DrawCharacterOutline(FontCharacter character, QPen pen)
+void CustomView::drawCharacterOutline(QPainter *painter, FontCharacter character, QPen pen, qreal scaleX, qreal scaleY)
 {
+    painter->setPen(pen);
+
     //Draw Top Line
-    scene->addLine(character.getStartPixel(), character.getTopPixel(), character.getEndPixel(), character.getTopPixel(), pen);
+    painter->drawLine(character.getStartPixel() * scaleX, character.getTopPixel() * scaleY, character.getEndPixel() * scaleX, character.getTopPixel() * scaleY);
 
     //Draw left bottom to top line
-    scene->addLine(character.getStartPixel(), character.getTopPixel(), character.getStartPixel(), character.getTopPixel() + openedFile->getCharacterHeight(), pen);
+    painter->drawLine(character.getStartPixel() * scaleX, character.getTopPixel() * scaleY, character.getStartPixel() * scaleX, (character.getTopPixel() + openedFile->getCharacterHeight()) * scaleY);
 
     //Draw right bottom to top line
-    scene->addLine(character.getEndPixel(), character.getTopPixel(), character.getEndPixel(), character.getTopPixel() + openedFile->getCharacterHeight(), pen);
+    painter->drawLine(character.getEndPixel() * scaleX, character.getTopPixel() * scaleY, character.getEndPixel() * scaleX, (character.getTopPixel() + openedFile->getCharacterHeight()) * scaleY);
 
     //Draw bottom line
-    scene->addLine(character.getStartPixel(), character.getTopPixel()  + openedFile->getCharacterHeight() , character.getEndPixel(), character.getTopPixel()  + openedFile->getCharacterHeight(), pen);
+    painter->drawLine(character.getStartPixel() * scaleX, (character.getTopPixel()  + openedFile->getCharacterHeight()) * scaleY , character.getEndPixel() * scaleX , (character.getTopPixel()  + openedFile->getCharacterHeight()) * scaleY);
 }
 
 void CustomView::setScene(QGraphicsScene* scene)
@@ -129,6 +119,32 @@ void CustomView::paintEvent(QPaintEvent *event)
     }
 
     QGraphicsView::paintEvent(event);
+
+    QPainter *painter = new QPainter(viewport());
+
+    QTransform t = viewportTransform();
+
+    qreal scaleX = t.m11();
+    qreal scaleY = t.m22();
+
+    painter->setTransform(QTransform(1, t.m12(), t.m13(),t.m21(), 1, t.m23(), t.m31(),t.m32(), t.m33()));
+
+    QPen pen(Qt::gray, 2, Qt::DashLine, Qt::FlatCap);
+
+    for (int i = 0; i < openedFile->CharactersCount(); i++)
+    {
+        FontCharacter character = openedFile->GetItem(i);
+
+        drawCharacterOutline(painter, character, pen, scaleX, scaleY);
+    }
+
+    if(openedFile->CharactersCount() > 0 && selectedChar >= 0 && selectedChar < openedFile->CharactersCount())
+    {
+        pen.setColor(Qt::green);
+        drawCharacterOutline(painter, openedFile->GetItem(selectedChar), pen, scaleX, scaleY);
+    }
+
+    delete painter;
 }
 
 void CustomView::mousePressEvent(QMouseEvent *event)

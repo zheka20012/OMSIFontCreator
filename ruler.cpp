@@ -68,7 +68,7 @@ void Ruler::paintEvent(QPaintEvent* event)
 
         if(fixedPosition % 10 == 0)
         {
-            int lineHeight = fixedPosition % 100 == 0 ? 10 : fixedPosition % 50 == 0 ? 8 : 5;
+            int lineHeight = fixedPosition % 100 == 0 ? (isVertical ? width() : height()) : fixedPosition % 50 == 0 ? 8 : 5;
 
             if(fixedPosition == 0)
             {
@@ -85,22 +85,24 @@ void Ruler::paintEvent(QPaintEvent* event)
             }
         }
 
-        if (fixedPosition % 100 == 0)
+        int scaleDivider = scale > 9 ? 10 : scale > 3 ? 20 : scale > 1 ? 50 : 100;
+
+
+        if (fixedPosition % scaleDivider == 0)
         {
             QString const txt = QString::number(qAbs(fixedPosition));
             QRect txtRect = fm.boundingRect(txt);
-            qreal xc = txtRect.width() * 0.5;
-            qreal yc = txtRect.height() * 0.5;
-            // translates the coordinate system by xc and yc
+            qreal xc = txtRect.width();
+            qreal yc = txtRect.height()*0.7;
 
             if(isVertical)
             {
-                painter.translate(xc, unscaledPosition + yc);
+                painter.translate(yc, unscaledPosition + xc*1.2);
                 painter.rotate(-90);
             }
             else
             {
-                painter.translate(unscaledPosition + xc, yc);
+                painter.translate(unscaledPosition + xc/5, yc);
             }
 
             painter.drawText(txtRect, txt);

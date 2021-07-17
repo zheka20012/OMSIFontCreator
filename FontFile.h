@@ -12,6 +12,7 @@ private:
     QVector<FontCharacter> CharactersArray;
 
     int GetItemIndex(const QChar letter);
+    int selectedIndex;
 
     void AddCharacter(QTextStream &inStream);
 
@@ -29,8 +30,6 @@ public:
 
 
     FontCharacter& GetItem (const int index);
-
-    FontFile();
 
     FontFile(const QString fontName);
 
@@ -51,6 +50,8 @@ public:
 
     unsigned short getHorizontalGap() {return horizontalGap;}
     void setHorizontalGap(unsigned short newValue) {horizontalGap = newValue; changed = true;}
+
+    int getSelectedCharacterIndex() {return selectedIndex;}
 
     bool IsChanged();
     void setFileChanged(bool value) {changed = value;}
