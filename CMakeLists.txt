@@ -38,6 +38,10 @@ set(PROJECT_SOURCES
         fontfile.cpp
         fontcharacter.h
         fontcharacter.cpp
+        customview.h
+        customview.cpp
+        ruler.h
+        ruler.cpp
         ${TS_FILES}
 )
 

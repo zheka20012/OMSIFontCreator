@@ -23,7 +23,7 @@ void FontCharacter::SetCharacter(const QChar letter)
     Letter = letter;
 }
 
-void FontCharacter::SetPixels(ushort leftPixel, ushort rightPixel, ushort topPixel)
+void FontCharacter::SetPixels(unsigned int leftPixel, unsigned int  rightPixel, unsigned int  topPixel)
 {
     LeftPixel = leftPixel;
     RightPixel = rightPixel;

@@ -1,18 +1,14 @@
-#include "fontfile.h"
+#include "FontFile.h"
 
 FontFile::FontFile()
 {
 
 }
 
-FontFile::~FontFile()
-{
-
-}
-
 FontFile::FontFile(QString fontName)
 {
-    FontName = fontName;
+    FontFile::fontName = fontName;
+    changed = true;
 }
 
 void FontFile::Load(const QString fileName)
@@ -24,6 +20,12 @@ void FontFile::Load(const QString fileName)
         return;
     }
 
+    QFileInfo fileInfo(fileName);
+
+    filePath = fileInfo.absoluteDir().path();
+
+    fontFileName = fileInfo.fileName();
+
     QTextStream inStream(&inputFile);
 
     QString line;
@@ -33,11 +35,11 @@ void FontFile::Load(const QString fileName)
         //Read font parameters
         if(line == "[newfont]")
         {
-            FontName = inStream.readLine();
-            FontColorImage = inStream.readLine();
-            FontAlphaImage = inStream.readLine();
-            CharacterHeight = inStream.readLine().toUShort();
-            HorizontalGap = inStream.readLine().toUShort();
+            fontName = inStream.readLine();
+            fontColorImage = inStream.readLine();
+            fontAlphaImage = inStream.readLine();
+            characterHeight = inStream.readLine().toUShort();
+            horizontalGap = inStream.readLine().toUShort();
         }
 
         //Read Characters
@@ -48,6 +50,7 @@ void FontFile::Load(const QString fileName)
     }
 
     inputFile.close();
+    changed = false;
 }
 
 void FontFile::Save()
@@ -66,11 +69,11 @@ void FontFile::Save(const QString fileName)
 
     //Write basic info
     outStream << "[newfont]" << Qt::endl;
-    outStream << FontName << Qt::endl;
-    outStream << FontColorImage << Qt::endl;
-    outStream << FontAlphaImage << Qt::endl;
-    outStream << CharacterHeight << Qt::endl;
-    outStream << HorizontalGap << Qt::endl;
+    outStream << fontName << Qt::endl;
+    outStream << fontColorImage << Qt::endl;
+    outStream << fontAlphaImage << Qt::endl;
+    outStream << characterHeight << Qt::endl;
+    outStream << horizontalGap << Qt::endl;
     outStream << Qt::endl << Qt::endl;
 
     //Write every character
@@ -80,6 +83,16 @@ void FontFile::Save(const QString fileName)
     }
 
     outFile.close();
+
+    QFileInfo fileInfo(fileName);
+
+    filePath = fileInfo.absoluteDir().path();
+
+    fontFileName = fileInfo.fileName();
+
+    //Save bitmaps
+
+    changed = false;
 }
 
 int FontFile::GetItemIndex(const QChar letter)
@@ -100,6 +113,8 @@ void FontFile::AddCharacter(QTextStream &inStream)
     FontCharacter character(inStream);
 
     CharactersArray.push_back(character);
+
+    changed = true;
 }
 
 int FontFile::AddCharacter(const QChar letter)
@@ -112,6 +127,8 @@ int FontFile::AddCharacter(const QChar letter)
     FontCharacter character(letter);
 
     CharactersArray.push_back(character);
+
+    changed = true;
 
     return CharactersArray.size() - 1;
 }
@@ -137,5 +154,21 @@ int FontFile::RemoveCharacter (int index)
 
     CharactersArray.removeAt(index);
 
+    changed = true;
     return 0;
+}
+
+bool FontFile::IsChanged()
+{
+    return changed;
+}
+
+int FontFile::CharactersCount()
+{
+    return CharactersArray.size();
+}
+
+FontCharacter& FontFile::GetItem (const int index)
+{
+    return CharactersArray[index];
 }
