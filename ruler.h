@@ -52,6 +52,8 @@ private:
     void rulerClickedV(QPoint);
     void moveSelection(qreal,qreal);
 
+    void drawMeters(QPainter* painter, qreal height, qreal scale, int divider, bool drawNumber, bool drawZero);
+
 signals:
     void sizeChanged(QSize const&);
 

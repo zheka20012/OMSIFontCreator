@@ -4,6 +4,7 @@
 #include <QCoreApplication>
 #include <fontcharacter.h>
 #include <QFileDialog>
+#include <QTextCodec>
 
 class FontFile
 {
@@ -16,6 +17,8 @@ private:
 
     void AddCharacter(QTextStream &inStream);
 
+    void ReadFromStream(QTextStream *inputStream);
+
     bool changed;
 
     QString fontName;
@@ -27,13 +30,20 @@ private:
     unsigned short horizontalGap;
 
 public:
+    enum FileType
+    {
+        UTF8,
+        ANSI
+    };
 
+    FileType fileType = FileType::UTF8;
 
     FontCharacter& GetItem (const int index);
 
     FontFile(const QString fontName);
 
     QString getFilePath() {return filePath;}
+    QString getFileName() {return FileName;}
     QString getFontFileName() { return fontFileName != "" ? fontFileName : fontName;}
 
     QString getFontName() {return fontName;}
@@ -55,6 +65,8 @@ public:
 
     bool IsChanged();
     void setFileChanged(bool value) {changed = value;}
+
+    bool HasItem (const QChar item);
 
     void Load(const QString fileName);
 

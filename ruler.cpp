@@ -30,6 +30,7 @@ void Ruler::paintEvent(QPaintEvent* event)
     setFixedSize(*customSize);
 
     QPainter painter(this);
+    painter.setRenderHints(QPainter::TextAntialiasing);
 
     bool isVertical = mRulerType == RulerType::Vertical;
 
@@ -51,65 +52,70 @@ void Ruler::paintEvent(QPaintEvent* event)
     }
     else
     {
-        painter.translate(offset, 0);
+         painter.translate(offset, 0);
     }
 
     painter.setFont(font());
 
-    int rulerSize = isVertical ? customSize->height() : customSize->width();
+    qreal lineHeight = isVertical ? width() : height();
 
+    drawMeters(&painter, lineHeight, scale, 100, true, true);
+
+    update();
+}
+
+void Ruler::drawMeters(QPainter* painter, qreal height, qreal scale, int divider, bool drawNumber, bool drawZero = false)
+{
     QFontMetrics fm(font());
+    int rulerSize = mRulerType == RulerType::Vertical ? customSize->height() : customSize->width();
 
-    for (int position = 0; position < qMax((int)(rulerSize / scale), rulerSize); ++position)
+    for(int position = 0; position < qMax((int)(rulerSize / scale), rulerSize); ++position)
     {
-        int unscaledPosition = int(position * scale);
+        int realPosition = position - originPixel - RULER_SIZE;
 
-        int fixedPosition = position - originPixel - RULER_SIZE;
+        if(qAbs(realPosition) % divider != 0) continue;
 
-        if(fixedPosition % 10 == 0)
+        qreal unscaledPosition = position * scale;
+
+        if(realPosition == 0 && drawZero)
         {
-            int lineHeight = fixedPosition % 100 == 0 ? (isVertical ? width() : height()) : fixedPosition % 50 == 0 ? 8 : 5;
-
-            if(fixedPosition == 0)
-            {
-                painter.setPen(QColor(255,0,0));
-            }
-
-            if(isVertical)
-            {
-                painter.drawLine(customSize->width() - lineHeight, unscaledPosition, customSize->width(), unscaledPosition);
-            }
-            else
-            {
-                painter.drawLine(unscaledPosition, customSize->height() - lineHeight,unscaledPosition, customSize->height());
-            }
+            painter->setPen(QColor(255,0,0));
         }
 
-        int scaleDivider = scale > 9 ? 10 : scale > 3 ? 20 : scale > 1 ? 50 : 100;
-
-
-        if (fixedPosition % scaleDivider == 0)
+        if(mRulerType == RulerType::Vertical)
         {
-            QString const txt = QString::number(qAbs(fixedPosition));
+            painter->drawLine(customSize->width() - height, unscaledPosition, customSize->width(), unscaledPosition);
+        }
+        else
+        {
+            painter->drawLine(unscaledPosition, customSize->height() - height,unscaledPosition, customSize->height());
+        }
+
+        if(drawNumber)
+        {
+            if(realPosition == 0 && !drawZero) continue;
+
+            QString const txt = QString::number(qAbs(realPosition));
             QRect txtRect = fm.boundingRect(txt);
             qreal xc = txtRect.width();
             qreal yc = txtRect.height()*0.7;
 
-            if(isVertical)
+            if(mRulerType == RulerType::Vertical)
             {
-                painter.translate(yc, unscaledPosition + xc*1.2);
-                painter.rotate(-90);
+                painter->translate(yc, unscaledPosition + xc*1.2);
+                painter->rotate(-90);
             }
             else
             {
-                painter.translate(unscaledPosition + xc/5, yc);
+                painter->translate(unscaledPosition + xc/5, yc);
             }
 
-            painter.drawText(txtRect, txt);
-            painter.resetTransform();
+            painter->drawText(txtRect, txt);
+            painter->resetTransform();
+
         }
 
-        painter.setPen(QColor(0,0,0));
+        painter->setPen(QColor(0,0,0));
     }
 }
 

@@ -60,6 +60,9 @@ void MainWindow::UpdateCharacterInterface(int characterIndex)
     ui->characterStartXEdit->blockSignals(true);
     ui->characterEndXEdit->blockSignals(true);
     ui->characterTopEdit->blockSignals(true);
+    ui->charactersBox->blockSignals(true);
+
+    ui->charactersBox->setCurrentIndex(characterIndex);
 
     FontCharacter character = file->GetItem(characterIndex);
 
@@ -70,6 +73,7 @@ void MainWindow::UpdateCharacterInterface(int characterIndex)
     ui->characterStartXEdit->blockSignals(false);
     ui->characterEndXEdit->blockSignals(false);
     ui->characterTopEdit->blockSignals(false);
+    ui->charactersBox->blockSignals(false);
 }
 
 void MainWindow::UpdateTitle()
@@ -162,9 +166,11 @@ void MainWindow::on_actionOpen_triggered()
     file = new FontFile("");
     file->Load(filePath);
 
+
+
     ui->graphicsView->Init(file);
     UpdateInterface();
-    UpdateCharacterInterface(0);
+    if(file->CharactersCount() != 0) UpdateCharacterInterface(0);
     UpdateScene();
     UpdateTitle();
 }
@@ -172,21 +178,6 @@ void MainWindow::on_actionOpen_triggered()
 
 void MainWindow::on_actionQuit_triggered()
 {
-    if(file->IsChanged())
-    {
-        int outValue = AskForFileSave();
-
-        switch (outValue) {
-        case QMessageBox::Yes:
-            on_actionSave_triggered();
-            break;
-        case QMessageBox::No:
-            break;
-        case QMessageBox::Cancel:
-            return;
-        }
-    }
-
     QCoreApplication::quit();
 }
 
@@ -194,7 +185,7 @@ void MainWindow::on_actionSave_triggered()
 {
     if(file == NULL) return;
 
-    QString savePath = file->getFilePath();
+    QString savePath = file->getFileName();
 
     if(savePath == "")
     {
@@ -258,11 +249,6 @@ void MainWindow::on_horizontalGapEdit_valueChanged(int newValue)
     UpdateScene();
 }
 
-void MainWindow::on_addCharButton_clicked()
-{
-
-}
-
 
 void MainWindow::on_charactersBox_currentIndexChanged(int index)
 {
@@ -277,6 +263,7 @@ void MainWindow::on_characterStartXEdit_valueChanged(int newValue)
     file->setFileChanged(true);
     UpdateTitle();
     UpdateScene();
+    UpdateCharacterInterface(ui->charactersBox->currentIndex());
 }
 
 
@@ -286,6 +273,7 @@ void MainWindow::on_characterEndXEdit_valueChanged(int newValue)
     file->setFileChanged(true);
     UpdateScene();
     UpdateTitle();
+    UpdateCharacterInterface(ui->charactersBox->currentIndex());
 }
 
 
@@ -295,9 +283,11 @@ void MainWindow::on_characterTopEdit_valueChanged(int newValue)
     file->setFileChanged(true);
     UpdateScene();
     UpdateTitle();
+    UpdateCharacterInterface(ui->charactersBox->currentIndex());
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
+
 {
     if(file->IsChanged())
     {
@@ -318,3 +308,82 @@ void MainWindow::closeEvent(QCloseEvent *event)
     event->accept();
 
 }
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    ui->deleteItemButton->resize(ui->deleteItemButton->height(), ui->deleteItemButton->height());
+}
+
+void MainWindow::on_deleteItemButton_clicked()
+{
+    int lastIndex = ui->charactersBox->currentIndex();
+
+    if(lastIndex < 0) return;
+
+    file->RemoveCharacter(lastIndex);
+    UpdateInterface();
+    UpdateCharacterInterface(qMin(lastIndex, file->CharactersCount()-1));
+    update();
+}
+
+
+void MainWindow::on_addCharButton_clicked()
+{
+    QMessageBox itemExistsBox(QMessageBox::Warning, "Error adding character!", "Font already have this character!", QMessageBox::Ok);
+
+    if(ui->newCharField->text().length() != 1) return;
+
+    QChar character = ui->newCharField->text().at(0);
+
+    if(file->HasItem(character))
+    {
+        QMessageBox itemExistsBox(QMessageBox::Warning, "Error adding character!", "Font already have this character!", QMessageBox::Ok);
+        return;
+    }
+
+    file->AddCharacter(character);
+    UpdateInterface();
+    UpdateCharacterInterface(file->CharactersCount()-1);
+    ui->graphicsView->Redraw(file->CharactersCount()-1);
+}
+
+
+
+void MainWindow::on_drawColorImage_stateChanged(int arg1)
+{
+    ui->graphicsView->setDrawColor((bool)arg1);
+    ui->drawAlphaImage->setChecked(ui->graphicsView->getDrawAlpha());
+}
+
+
+void MainWindow::on_drawAlphaImage_stateChanged(int arg1)
+{
+    ui->graphicsView->setDrawAlpha((bool)arg1);
+    ui->drawColorImage->setChecked(ui->graphicsView->getDrawColor());
+}
+
+
+void MainWindow::on_drawFinalImage_stateChanged(int arg1)
+{
+    ui->graphicsView->setDrawFinal((bool)arg1);
+}
+
+
+void MainWindow::on_actionRemove_Color_Image_triggered()
+{
+    file->setFontColorImage("");
+    ui->graphicsView->ForceRedraw();
+}
+
+
+void MainWindow::on_fileFormatBox_currentIndexChanged(int index)
+{
+    file->fileType = (FontFile::FileType)index;
+}
+
+
+void MainWindow::on_actionAbout_Qt_triggered()
+{
+    QMessageBox::aboutQt(this);
+}
+

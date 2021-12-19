@@ -3,45 +3,51 @@
 FontFile::FontFile(QString fontName)
 {
     FontFile::fontName = fontName;
+    changed = false;
 }
 
-void FontFile::Load(const QString fileName)
+void FontFile::Load(const QString loadFileName)
 {
-    QFile inputFile(fileName);
+    QFile inputFile(loadFileName);
 
     if(!inputFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         return;
     }
 
-    QFileInfo fileInfo(fileName);
+    FileName = loadFileName;
+
+    QFileInfo fileInfo(loadFileName);
 
     filePath = fileInfo.absoluteDir().path();
 
     fontFileName = fileInfo.fileName();
 
-    QTextStream inStream(&inputFile);
+    QByteArray inputArray(inputFile.readAll());
 
-    QString line;
+    QTextCodec *codec = QTextCodec::codecForName("CP-1250");
 
-    while (!(line = inStream.readLine()).isNull())
+    QString decodedArray = codec->toUnicode(inputArray);
+
+    QTextStream *inStream = new QTextStream(&decodedArray);
+
+    ReadFromStream(inStream);
+
+    if(fontName == "")
     {
-        //Read font parameters
-        if(line == "[newfont]")
-        {
-            fontName = inStream.readLine();
-            fontColorImage = inStream.readLine();
-            fontAlphaImage = inStream.readLine();
-            characterHeight = inStream.readLine().toUShort();
-            horizontalGap = inStream.readLine().toUShort();
-        }
+        //Looks like file isn't Windows-1250, read as UTF-8
+        delete inStream;
 
-        //Read Characters
-        if(line == "[char]")
-        {
-            AddCharacter(inStream);
-        }
+        CharactersArray.clear();
+
+        inputFile.reset();
+
+        inStream = new QTextStream(&inputFile);
+
+        ReadFromStream(inStream);
     }
+
+    delete inStream;
 
     inputFile.close();
     changed = false;
@@ -49,7 +55,7 @@ void FontFile::Load(const QString fileName)
 
 void FontFile::Save()
 {
-
+    Save(FileName);
 }
 
 void FontFile::Save(const QString fileName)
@@ -66,11 +72,15 @@ void FontFile::Save(const QString fileName)
         throw std::runtime_error("Can't open file " + fileName.toStdString() + "!");
     }
 
-    QTextStream outStream(&outFile);
+    QString outString;
+
+    QTextStream outStream(&outString);
+
+    QTextCodec *codec = QTextCodec::codecForName("CP-1250");
 
     //Write basic info
-    outStream << "[newfont]" << Qt::endl;
-    outStream << fontName << Qt::endl;
+    outStream <<  "[newfont]" << Qt::endl;
+    outStream <<  fontName << Qt::endl;
 
 
     QDir dir(fileName);
@@ -126,8 +136,18 @@ void FontFile::Save(const QString fileName)
         CharactersArray[i].Save(outStream);
     }
 
-    outFile.close();
+    if(fileType == FileType::ANSI)
+    {
+        QByteArray convertedItems = codec->fromUnicode(outString);
 
+        outFile.write(convertedItems);
+    }
+    else
+    {
+        QTextStream stream(&outFile);
+
+        stream << outString;
+    }
 
     fileInfo = new QFileInfo(fileName);
 
@@ -141,7 +161,7 @@ void FontFile::Save(const QString fileName)
 }
 
 int FontFile::GetItemIndex(const QChar letter)
-{
+{    
     for(int i = 0; i < CharactersArray.size(); i++)
     {
         if(CharactersArray[i].GetCharacter() == letter)
@@ -192,7 +212,7 @@ int FontFile::RemoveCharacter(const QChar letter)
 
 int FontFile::RemoveCharacter (int index)
 {
-    if(index >= CharactersArray.size())
+    if(index >= CharactersArray.size() || index < 0)
     {
         return -1;
     }
@@ -216,4 +236,41 @@ int FontFile::CharactersCount()
 FontCharacter& FontFile::GetItem (const int index)
 {
     return CharactersArray[index];
+}
+
+bool FontFile::HasItem (const QChar item)
+{
+    for (int i = 0; i < CharactersArray.length(); i++)
+    {
+        if(CharactersArray[i].GetCharacter() == item)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void FontFile::ReadFromStream(QTextStream *inputStream)
+{
+    QString line;
+
+    while (!(line = inputStream->readLine()).isNull())
+    {
+        //Read font parameters
+        if(line == "[newfont]")
+        {
+            fontName = inputStream->readLine();
+            fontColorImage = inputStream->readLine();
+            fontAlphaImage = inputStream->readLine();
+            characterHeight = inputStream->readLine().toUShort();
+            horizontalGap = inputStream->readLine().toUShort();
+        }
+
+        //Read Characters
+        if(line == "[char]")
+        {
+            AddCharacter(*inputStream);
+        }
+    }
 }

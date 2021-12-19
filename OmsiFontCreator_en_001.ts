@@ -2,205 +2,262 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_001">
 <context>
+    <name>AddCharacter</name>
+    <message>
+        <location filename="addcharacter.ui" line="14"/>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="addcharacter.ui" line="45"/>
+        <source>Character:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Dialog</name>
+    <message>
+        <location filename="newcharacter.ui" line="14"/>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="newcharacter.ui" line="42"/>
+        <location filename="newcharacter.ui" line="48"/>
+        <source>A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="newcharacter.ui" line="61"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Character:&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <location filename="mainwindow.ui" line="14"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="309"/>
         <source>OMSI Font Creator</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="83"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="343"/>
+        <location filename="mainwindow.ui" line="61"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="98"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="344"/>
+        <location filename="mainwindow.ui" line="76"/>
         <source>Character Height:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="127"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="346"/>
+        <location filename="mainwindow.ui" line="105"/>
         <source>Horizontal Gap:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="178"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="348"/>
+        <location filename="mainwindow.ui" line="134"/>
         <source>Font Name:  </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="200"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="349"/>
+        <location filename="mainwindow.ui" line="156"/>
         <source>Character Start:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="229"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="351"/>
+        <location filename="mainwindow.ui" line="185"/>
         <source>Character End:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="261"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="353"/>
+        <location filename="mainwindow.ui" line="217"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Character Top:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="294"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="355"/>
+        <location filename="mainwindow.ui" line="326"/>
+        <source>Character:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="352"/>
+        <source>Add</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="397"/>
+        <source>Draw Color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="387"/>
+        <source>Draw Alpha</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="404"/>
+        <source>Draw Final</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="423"/>
+        <source>File Format:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="431"/>
+        <source>UTF-8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="436"/>
+        <source>ANSI</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="460"/>
         <source>File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="307"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="356"/>
+        <location filename="mainwindow.ui" line="472"/>
         <source>Image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="315"/>
-        <location filename="mainwindow.ui" line="393"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="340"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="357"/>
+        <location filename="mainwindow.ui" line="480"/>
+        <location filename="mainwindow.ui" line="580"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="327"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="310"/>
+        <location filename="mainwindow.ui" line="494"/>
         <source>New</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="330"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="312"/>
+        <location filename="mainwindow.ui" line="497"/>
         <source>Ctrl+N</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="335"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="314"/>
+        <location filename="mainwindow.ui" line="506"/>
         <source>Open</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="338"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="316"/>
+        <location filename="mainwindow.ui" line="509"/>
         <source>Ctrl+O</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="343"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="318"/>
+        <location filename="mainwindow.ui" line="518"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="346"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="320"/>
+        <location filename="mainwindow.ui" line="521"/>
         <source>Ctrl+S</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="351"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="322"/>
+        <location filename="mainwindow.ui" line="530"/>
         <source>Save As</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="354"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="324"/>
+        <location filename="mainwindow.ui" line="533"/>
         <source>Ctrl+Shift+S</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="359"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="326"/>
+        <location filename="mainwindow.ui" line="538"/>
         <source>Preferences</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="364"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="327"/>
+        <location filename="mainwindow.ui" line="543"/>
         <source>Quit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="367"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="329"/>
+        <location filename="mainwindow.ui" line="546"/>
         <source>Ctrl+Q</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="372"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="331"/>
+        <location filename="mainwindow.ui" line="555"/>
         <source>Load Alpha Image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="375"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="333"/>
+        <location filename="mainwindow.ui" line="558"/>
         <source>Ctrl+I</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="380"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="335"/>
+        <location filename="mainwindow.ui" line="567"/>
         <source>Load Color Image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="383"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="337"/>
+        <location filename="mainwindow.ui" line="570"/>
         <source>Ctrl+Shift+I</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="388"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="339"/>
+        <location filename="mainwindow.ui" line="575"/>
         <source>Remove Color Image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="398"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="341"/>
+        <location filename="mainwindow.ui" line="585"/>
         <source>About Qt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="403"/>
-        <location filename="out/build/x64-Debug/OmsiFontCreator_autogen/include/ui_mainwindow.h" line="342"/>
+        <location filename="mainwindow.ui" line="590"/>
         <source>WebDisk Discussion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="83"/>
+        <location filename="mainwindow.ui" line="599"/>
+        <source>Add Characters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="608"/>
+        <source>Remove Selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="613"/>
+        <source>Auto-Generate Layout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="87"/>
         <source>You have unsaved changes! Do you want to save them before quit?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="94"/>
+        <location filename="mainwindow.cpp" line="98"/>
         <source>Open Alpha Image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="153"/>
+        <location filename="mainwindow.cpp" line="157"/>
         <source>Open Font File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="234"/>
+        <location filename="mainwindow.cpp" line="225"/>
         <source>Save Font</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="234"/>
+        <location filename="mainwindow.cpp" line="225"/>
         <source>Font File (*.oft)</source>
         <translation type="unfinished"></translation>
     </message>

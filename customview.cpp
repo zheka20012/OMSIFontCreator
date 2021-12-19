@@ -7,6 +7,9 @@ CustomView::CustomView(QWidget*& widget) : QGraphicsView(widget), scene(new QGra
 
     connect(vRuler, &Ruler::sizeChanged, [this](QSize const& size) { setViewportMargins(size.width(), RULER_SIZE, 0, 0); });
     connect(hRuler, &Ruler::sizeChanged, [this](QSize const& size) { setViewportMargins(RULER_SIZE, size.height(), 0, 0); });
+
+    setBackgroundBrush(QBrush(QImage(":/img/images/checker.png")));
+    setRenderHints(QPainter::LosslessImageRendering);
 }
 
 void CustomView::Init(FontFile *fontFile)
@@ -19,7 +22,26 @@ void CustomView::Redraw(const int selectedIndex)
 {
     scene->clear();
 
-    if(openedFile->getFontAlphaImage() != "")
+    if((shouldDrawColor || shouldDrawFinal) && openedFile->getFontColorImage() != "")
+    {
+        QFileInfo info(openedFile->getFontColorImage());
+
+        QImage *colorImage;
+
+        if(info.isAbsolute())
+        {
+            colorImage = new QImage(openedFile->getFontAlphaImage());
+        }
+        else
+        {
+            colorImage = new QImage(openedFile->getFilePath() + "/" + openedFile->getFontColorImage());
+        }
+
+
+        finalImage = QPixmap::fromImage(*colorImage);
+    }
+
+    if(openedFile->getFontAlphaImage() != "" && (shouldDrawAlpha || shouldDrawFinal))
     {
         QFileInfo info(openedFile->getFontAlphaImage());
 
@@ -34,35 +56,34 @@ void CustomView::Redraw(const int selectedIndex)
             alphaImage = new QImage(openedFile->getFilePath() + "/" + openedFile->getFontAlphaImage());
         }
 
-        alphaImageItem = scene->addPixmap(QPixmap::fromImage(*alphaImage));
-        scene->setSceneRect(alphaImageItem->boundingRect());
+        if(!shouldDrawFinal)
+        {
+            if(shouldDrawAlpha)
+            {
+                finalImage = QPixmap::fromImage(*alphaImage);
+            }
+        }
+        else
+        {
+            alphaImage->invertPixels();
+            QBitmap bitmap = QBitmap::fromImage(alphaImage->scaled(finalImage.width(), finalImage.height()), Qt::AutoColor);
+            finalImage.setMask(bitmap);
+        }
+
+        scene->setSceneRect(alphaImage->rect());
     }
 
-//    if(openedFile->getFontColorImage() != "")
-//    {
-//        QFileInfo info(openedFile->getFontColorImage());
-
-//        QImage *colorImage;
-
-//        if(info.isAbsolute())
-//        {
-//            colorImage = new QImage(openedFile->getFontAlphaImage());
-//        }
-//        else
-//        {
-//            colorImage = new QImage(openedFile->getFilePath() + "/" + openedFile->getFontColorImage());
-//        }
-
-//        scene->addPixmap(QPixmap::fromImage(*colorImage));
-
-//    }
+    finalImageItem = scene->addPixmap(finalImage);
 
     selectedChar = selectedIndex;
-
     setScene(scene);
     show();
     update();
     viewport()->update();
+}
+
+void CustomView::ForceRedraw(){
+    Redraw(selectedChar);
 }
 
 void CustomView::drawCharacterOutline(QPainter *painter, FontCharacter character, QPen pen, qreal scaleX, qreal scaleY)
@@ -85,12 +106,6 @@ void CustomView::drawCharacterOutline(QPainter *painter, FontCharacter character
 void CustomView::setScene(QGraphicsScene* scene)
 {
     QGraphicsView::setScene(scene);
-
-    if(scene)
-    {
-        vRuler->setFixedHeight(scene->height());
-        hRuler->setFixedWidth(scene->width());
-    }
 }
 
 void CustomView::wheelEvent(QWheelEvent *e)
@@ -112,10 +127,10 @@ void CustomView::wheelEvent(QWheelEvent *e)
 
 void CustomView::paintEvent(QPaintEvent *event)
 {
-    if(alphaImageItem != nullptr && openedFile->getFontAlphaImage() != "")
+    if(finalImageItem != nullptr)
     {
-        vRuler->setOrigin(mapFromScene(alphaImageItem->mapToScene(alphaImageItem->offset())));
-        hRuler->setOrigin(mapFromScene(alphaImageItem->mapToScene(alphaImageItem->offset())));
+        vRuler->setOrigin(mapFromScene(finalImageItem->mapToScene(finalImageItem->offset())));
+        hRuler->setOrigin(mapFromScene(finalImageItem->mapToScene(finalImageItem->offset())));
     }
 
     QGraphicsView::paintEvent(event);

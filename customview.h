@@ -16,7 +16,7 @@ private:
     QImage* alphaImage;
     QImage* colorImage;
 
-    bool requsetedRedraw;
+    QPixmap finalImage;
 
     Ruler* vRuler;
     Ruler* hRuler;
@@ -25,11 +25,15 @@ private:
 
     QGraphicsScene *scene;
 
-    QGraphicsPixmapItem *alphaImageItem;
+    QGraphicsPixmapItem *finalImageItem;
 
     void drawCharacterOutline(QPainter *painter, FontCharacter character, QPen pen, qreal scaleX, qreal scaleY);
 
     int selectedChar;
+
+    bool shouldDrawAlpha = true;
+    bool shouldDrawColor;
+    bool shouldDrawFinal;
 
 public:    
     CustomView();
@@ -38,12 +42,20 @@ public:
     void Init(FontFile *fontFile);
 
     void Redraw(const int selectedIndex);
+    void ForceRedraw();
+
+    void setDrawAlpha(bool value) {shouldDrawAlpha = value; shouldDrawColor = !shouldDrawAlpha; Redraw(selectedChar);}
+    bool getDrawAlpha() {return shouldDrawAlpha;}
+
+    void setDrawColor(bool value) {shouldDrawColor = value; shouldDrawAlpha = !shouldDrawColor; Redraw(selectedChar);}
+    bool getDrawColor() {return shouldDrawColor;}
+
+    void setDrawFinal(bool value) {shouldDrawFinal = value; Redraw(selectedChar);}
+    bool getDrawFinal() {return shouldDrawFinal;}
 
     QImage* getAlphaImage() {return alphaImage;}
-    void setAlphaImage(QImage *value) {alphaImage = value; requsetedRedraw = true;}
 
     QImage* getColorImage() {return colorImage;}
-    void setColorImage(QImage *value) {colorImage = value; requsetedRedraw = true;}
 
     void setScene(QGraphicsScene *scene);
 

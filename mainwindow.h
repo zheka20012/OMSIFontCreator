@@ -9,7 +9,9 @@
 #include <FontFile.h>
 #include <QMessageBox>
 #include <QList>
-#include <Qaction>
+#include <QAction>
+#include <QResizeEvent>
+#include <QLineEdit>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -25,6 +27,7 @@ public:
 
 protected:
     void closeEvent(QCloseEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 
 
 private slots:
@@ -46,8 +49,6 @@ private slots:
 
     void on_horizontalGapEdit_valueChanged(int arg1);
 
-    void on_addCharButton_clicked();
-
     void on_charactersBox_currentIndexChanged(int index);
 
     void on_characterStartXEdit_valueChanged(int arg1);
@@ -55,6 +56,23 @@ private slots:
     void on_characterEndXEdit_valueChanged(int arg1);
 
     void on_characterTopEdit_valueChanged(int arg1);
+
+    void on_deleteItemButton_clicked();
+
+    void on_addCharButton_clicked();
+
+    void on_drawColorImage_stateChanged(int arg1);
+
+    void on_drawAlphaImage_stateChanged(int arg1);
+
+    void on_drawFinalImage_stateChanged(int arg1);
+
+    void on_actionRemove_Color_Image_triggered();
+
+    void on_fileFormatBox_currentIndexChanged(int index);
+
+    void on_actionAbout_Qt_triggered();
+
 
 private:
     Ui::MainWindow *ui;

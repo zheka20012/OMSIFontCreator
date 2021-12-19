@@ -1,18 +1,19 @@
 #include "fontcharacter.h"
 
+FontCharacter::~FontCharacter(){
+
+}
+
 FontCharacter::FontCharacter(const QChar letter)
 {
     Letter = letter;
-}
-
-
-FontCharacter::~FontCharacter()
-{
+    LeftPixel = RightPixel = 0;
+    TopPixel = 0;
 }
 
 FontCharacter::FontCharacter(QTextStream &inStream)
 {
-    Letter = inStream.readLine()[0];
+    Letter = inStream.readLine().at(0);
     LeftPixel = inStream.readLine().toUShort();
     RightPixel = inStream.readLine().toUShort();
     TopPixel = inStream.readLine().toUShort();
